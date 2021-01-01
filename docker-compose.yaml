@@ -1,0 +1,44 @@
+version: !!str 3.8
+
+services:
+
+    auth1:
+      image: auth1:latest
+      depends_on:
+        - mysql
+      env_file: production.env
+      environment: 
+        - "TZ=Asia/Tehran"
+      expose:
+        - "8000"
+      labels:
+        - "com.testproject.service_name=auth1"
+        - "com.testproject.service_env=production"
+        - "com.testproject.service_type=authentication"
+      networks:
+         - edge
+         - back
+      ports:
+        - "8000:8000"
+      restart: unless-stopped
+      domainname: testproject.com
+      hostname: testproject 
+
+    mysql:
+      image: mysql:latest
+      env_file: mysql.prod.env
+      environment: 
+        - "TZ=Asia/Tehran"
+      expose:
+        - "3306"
+      networks:
+        - back
+      restart: unless-stopped
+      volumes:
+        - mysqldata:/var/lib/mysql
+volumes:
+  mysqldata:
+
+networks:
+  edge:
+  back:     
